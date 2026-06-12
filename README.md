@@ -1,4 +1,4 @@
-# EndDragonSafeSpawner
+# EnderDragon Spawner Plugin
 
 Plugin Paper 1.21.11 para spawnar Ender Dragons no End em um intervalo configuravel, sem usar o ritual vanilla de respawn e sem quebrar blocos.
 
@@ -6,7 +6,7 @@ Plugin Paper 1.21.11 para spawnar Ender Dragons no End em um intervalo configura
 
 Baixe o plugin aqui:
 
-[EndDragonSafeSpawner-1.11.0-paper-1.21.11.jar](https://github.com/Sponter771/EndDragonSafeSpawner/releases/download/v1.11.0/EndDragonSafeSpawner-1.11.0-paper-1.21.11.jar)
+[EnderDragon-Spawner-Plugin-1.12.0-paper-1.21.11.jar](https://github.com/eemppty/EnderDragon-Spawner-Plugin/releases/download/v1.12.0/EnderDragon-Spawner-Plugin-1.12.0-paper-1.21.11.jar)
 
 Depois coloque o arquivo `.jar` na pasta `plugins/` do servidor.
 
@@ -14,9 +14,9 @@ Guia completo de comandos: veja `GUIA_COMANDOS.md`.
 
 ## Instalar
 
-1. Coloque `EndDragonSafeSpawner-1.11.0-paper-1.21.11.jar` na pasta `plugins/` do servidor Paper 1.21.11.
+1. Coloque `EnderDragon-Spawner-Plugin-1.12.0-paper-1.21.11.jar` na pasta `plugins/` do servidor Paper 1.21.11.
 2. Reinicie o servidor.
-3. Ajuste com os comandos abaixo ou edite `plugins/EndDragonSafeSpawner/config.yml`.
+3. Ajuste com os comandos abaixo ou edite `plugins/EnderDragonSpawnerPlugin/config.yml`.
 
 ## Comandos
 
@@ -49,7 +49,7 @@ O plugin nao chama o respawn vanilla do Ender Dragon. Ele spawna a entidade dire
 
 Por padrao, cada dragao nasce com 15 minutos para ser morto. O nome dele mostra o cronometro restante. Se o tempo acaba, o plugin remove o dragao e o proximo nascimento continua seguindo o intervalo configurado em `/dragaoend setinterval`.
 
-A boss bar tambem mostra o cronometro no titulo, mas o preenchimento da barra representa a vida atual do dragao. Ela pode ser configurada em `plugins/EndDragonSafeSpawner/config.yml`, na secao `bossbar`.
+A boss bar tambem mostra o cronometro no titulo, mas o preenchimento da barra representa a vida atual do dragao. Ela pode ser configurada em `plugins/EnderDragonSpawnerPlugin/config.yml`, na secao `bossbar`.
 
 Quando o tempo chega no final, o plugin mata o dragao usando a animacao vanilla de morte. Essa morte e marcada como expirada por tempo: nao anuncia top dano, nao entrega XP, nao deixa drops, cancela ovo/portal do dragao quando a API dispara esses eventos, e mostra apenas a mensagem de desaparecimento por tempo.
 

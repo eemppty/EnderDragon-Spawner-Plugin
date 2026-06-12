@@ -1,9 +1,10 @@
-name: EndDragonSafeSpawner
-version: 1.11.0
+name: EnderDragonSpawnerPlugin
+version: 1.12.0
 main: com.codex.enddragonsafespawner.EndDragonSafeSpawnerPlugin
 api-version: '1.21.11'
 author: Codex
 description: Spawns Ender Dragons in the End on a configurable timer without breaking blocks.
+prefix: EnderDragon Spawner Plugin
 
 commands:
   dragaoend:
@@ -15,5 +16,5 @@ commands:
 
 permissions:
   enddragonsafe.admin:
-    description: Permite configurar e usar o EndDragonSafeSpawner.
+    description: Permite configurar e usar o EnderDragon Spawner Plugin.
     default: op

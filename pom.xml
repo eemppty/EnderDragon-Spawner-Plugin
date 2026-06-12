@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.codex</groupId>
-    <artifactId>end-dragon-safe-spawner</artifactId>
-    <version>1.11.0</version>
+    <artifactId>enderdragon-spawner-plugin</artifactId>
+    <version>1.12.0</version>
     <packaging>jar</packaging>
 
-    <name>EndDragonSafeSpawner</name>
+    <name>EnderDragon Spawner Plugin</name>
     <description>Spawns Ender Dragons on a configurable schedule without breaking blocks.</description>
 
     <properties>
@@ -34,7 +34,7 @@
     </dependencies>
 
     <build>
-        <finalName>EndDragonSafeSpawner-${project.version}-paper-1.21.11</finalName>
+        <finalName>EnderDragon-Spawner-Plugin-${project.version}-paper-1.21.11</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

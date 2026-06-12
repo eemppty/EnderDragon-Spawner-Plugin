@@ -1,15 +1,15 @@
-# EndDragonSafeSpawner - Guia de Uso
+# EnderDragon Spawner Plugin - Guia de Uso
 
 Plugin para Paper 1.21.11 que spawna um Dragao do End automaticamente no End, com tempo para matar, boss bar, top dano, recompensa para top 1 e protecao para o dragao nao quebrar blocos.
 
 ## Instalacao
 
-1. Coloque o arquivo `EndDragonSafeSpawner-1.11.0-paper-1.21.11.jar` na pasta `plugins/`.
+1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.12.0-paper-1.21.11.jar` na pasta `plugins/`.
 2. Reinicie o servidor.
 3. O plugin vai criar a config em:
 
 ```text
-plugins/EndDragonSafeSpawner/config.yml
+plugins/EnderDragonSpawnerPlugin/config.yml
 ```
 
 4. Configure por comandos ou edite a config pela host.
@@ -234,7 +234,7 @@ Desativar:
 Arquivo:
 
 ```text
-plugins/EndDragonSafeSpawner/config.yml
+plugins/EnderDragonSpawnerPlugin/config.yml
 ```
 
 ### Mundo e coordenadas

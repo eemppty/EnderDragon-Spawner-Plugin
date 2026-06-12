@@ -5,6 +5,11 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
     static final String ADMIN_PERMISSION = "enddragonsafe.admin";
 
@@ -14,6 +19,7 @@ public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        migrateLegacyConfig();
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
@@ -35,7 +41,7 @@ public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
         command.setTabCompleter(dragonCommand);
 
         this.dragonScheduler.start();
-        getLogger().info("EndDragonSafeSpawner ativado.");
+        getLogger().info("EnderDragon Spawner Plugin ativado.");
     }
 
     @Override
@@ -45,6 +51,28 @@ public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
         }
         if (this.dragonService != null) {
             this.dragonService.removeAllBossBars();
+        }
+    }
+
+    private void migrateLegacyConfig() {
+        File dataFolder = getDataFolder();
+        File pluginsFolder = dataFolder.getParentFile();
+        if (pluginsFolder == null || dataFolder.exists()) {
+            return;
+        }
+
+        File legacyConfig = new File(new File(pluginsFolder, "EndDragonSafeSpawner"), "config.yml");
+        File newConfig = new File(dataFolder, "config.yml");
+        if (!legacyConfig.isFile() || newConfig.exists()) {
+            return;
+        }
+
+        try {
+            Files.createDirectories(dataFolder.toPath());
+            Files.copy(legacyConfig.toPath(), newConfig.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+            getLogger().info("Config antiga de EndDragonSafeSpawner migrada para EnderDragonSpawnerPlugin.");
+        } catch (IOException exception) {
+            getLogger().warning("Nao foi possivel migrar a config antiga: " + exception.getMessage());
         }
     }
 }
