@@ -2,6 +2,14 @@
 
 Plugin Paper 1.21.11 para spawnar Ender Dragons no End em um intervalo configuravel, sem usar o ritual vanilla de respawn e sem quebrar blocos.
 
+## Download
+
+Baixe o plugin aqui:
+
+[EndDragonSafeSpawner-1.11.0-paper-1.21.11.jar](https://github.com/Sponter771/EndDragonSafeSpawner/releases/download/v1.11.0/EndDragonSafeSpawner-1.11.0-paper-1.21.11.jar)
+
+Depois coloque o arquivo `.jar` na pasta `plugins/` do servidor.
+
 Guia completo de comandos: veja `GUIA_COMANDOS.md`.
 
 ## Instalar
