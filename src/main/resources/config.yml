@@ -1,0 +1,74 @@
+# EndDragonSafeSpawner
+# Paper 1.21.11
+
+enabled: true
+
+# Mundo onde o dragao nasce. Precisa ser um mundo do tipo THE_END.
+world: world_the_end
+
+spawn:
+  x: 0.0
+  y: 80.0
+  z: 0.0
+  yaw: 0.0
+  pitch: 0.0
+
+# Aceita qualquer valor em horas. Ex: 3.0 = de 3h em 3h, 5.0 = de 5h em 5h.
+interval-hours: 3.0
+
+# Evita acumular varios dragoes se ainda existir um Ender Dragon vivo no mundo configurado.
+skip-if-dragon-alive: true
+
+# O plugin spawna o dragao diretamente, sem usar o ritual vanilla de respawn.
+# Esta protecao impede o dragao de quebrar qualquer bloco, de qualquer tipo.
+block-protection:
+  enabled: true
+  only-plugin-dragons: true
+
+announce-spawn: true
+announce-expire: true
+
+dragon:
+  # O nome aceita {time}, que vira o cronometro restante.
+  countdown-name: true
+  custom-name: "&5Dragao do End &7- &e{time}"
+  custom-name-visible: true
+  # Tempo que os players tem para matar o dragao. Se acabar, ele desaparece.
+  kill-time-minutes: 15.0
+
+bossbar:
+  enabled: true
+  # O titulo aceita {time}, que vira o cronometro restante.
+  title: "&5Dragao do End &7- &e{time} &7para matar"
+  # O texto mostra o tempo, mas o preenchimento da barra mostra a vida atual do dragao.
+  progress-mode: HEALTH
+  # Cores: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+  color: PURPLE
+  # Estilos: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+  style: SOLID
+  # false = aparece so para players no mundo do dragao. true = aparece para todo mundo online.
+  show-to-all-online: false
+
+rewards:
+  top1:
+    enabled: false
+    # Use /dragaoend setreward top1 segurando o item na mao para preencher este item.
+    item: null
+    message: "&d{player} &7recebeu a recompensa de top 1: &f{item}&7 x{amount}."
+
+messages:
+  prefix: "&5[DragaoEnd]&r "
+  spawn: "&dUm Dragao do End nasceu em &f{world} &7(&f{x}, {y}, {z}&7)&d."
+  expire: "&cO Dragao do End desapareceu porque o tempo de &f{time}&c acabou."
+  defeat:
+    enabled: true
+    separator: "&8&m--------------------------"
+    title: "&5&lO DRAGAO ANCESTRAL CAIU"
+    killer-line: "&d{killer} &7matou o Dragao do End."
+    top-header: "&7Top dano causado:"
+    top-line: "&5#{position} &f{player} &7- &c{damage} dano"
+    no-damage-line: "&7Nenhum dano de player foi registrado."
+
+scheduler:
+  # Epoch millis do proximo spawn. O plugin atualiza sozinho.
+  next-spawn-at: 0
