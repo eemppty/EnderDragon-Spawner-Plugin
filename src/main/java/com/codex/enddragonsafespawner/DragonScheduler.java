@@ -72,7 +72,7 @@ final class DragonScheduler {
     String formatNextSpawn() {
         long next = getNextSpawnAt();
         if (next <= 0L) {
-            return "nao agendado";
+            return "não agendado";
         }
         return DATE_FORMAT.format(Instant.ofEpochMilli(next)) + " (" + formatDuration(Math.max(0L, next - System.currentTimeMillis())) + ")";
     }

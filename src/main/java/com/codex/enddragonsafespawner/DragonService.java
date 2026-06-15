@@ -74,7 +74,7 @@ final class DragonService implements Listener {
     SpawnOutcome spawnConfiguredDragon(boolean force) {
         Location location = getConfiguredLocation();
         if (location == null) {
-            return SpawnOutcome.failure("Mundo configurado nao existe ou nao e um mundo do End.");
+            return SpawnOutcome.failure("Mundo configurado não existe ou não é um mundo do End.");
         }
 
         World world = location.getWorld();
@@ -83,7 +83,7 @@ final class DragonService implements Listener {
         }
 
         if (!force && plugin.getConfig().getBoolean("skip-if-dragon-alive", true) && hasLivingDragon(world)) {
-            return SpawnOutcome.skipped("Ja existe um Ender Dragon vivo em " + world.getName() + ".");
+            return SpawnOutcome.skipped("Já existe um Ender Dragon vivo em " + world.getName() + ".");
         }
 
         location.getChunk().load(true);
@@ -102,7 +102,7 @@ final class DragonService implements Listener {
             Bukkit.broadcastMessage(formatSpawnMessage(location));
         }
 
-        return SpawnOutcome.spawned("Dragao spawnado em " + formatLocation(location) + ".", dragon);
+        return SpawnOutcome.spawned("Dragão spawnado em " + formatLocation(location) + ".", dragon);
     }
 
     Location getConfiguredLocation() {
@@ -295,7 +295,7 @@ final class DragonService implements Listener {
         Location location = readChampionNpcLocation();
         ChampionPlayer champion = readStoredChampion();
         String player = champion == null ? "nenhum jogador salvo" : champion.playerName();
-        return (location == null ? "local invalido" : formatLocation(location)) + " | jogador: " + player;
+        return (location == null ? "local inválido" : formatLocation(location)) + " | jogador: " + player;
     }
 
     void setKillTimeMillis(long millis) {
@@ -328,7 +328,7 @@ final class DragonService implements Listener {
     }
 
     String prefix() {
-        return color(plugin.getConfig().getString("messages.prefix", "&5[DragaoEnd]&r "));
+        return color(plugin.getConfig().getString("messages.prefix", "&5[DragãoEnd]&r "));
     }
 
     String color(String message) {
@@ -414,9 +414,9 @@ final class DragonService implements Listener {
             return;
         }
 
-        String template = plugin.getConfig().getString("dragon.custom-name", "&5Dragao do End &7- &e{time}");
+        String template = plugin.getConfig().getString("dragon.custom-name", "&5Dragão do End &7- &e{time}");
         if (template == null || template.isBlank()) {
-            template = "&5Dragao do End &7- &e{time}";
+            template = "&5Dragão do End &7- &e{time}";
         }
         if (!template.contains("{time}")) {
             template = template + " &7- &e{time}";
@@ -465,10 +465,10 @@ final class DragonService implements Listener {
     private String formatBossBarTitle(long remainingMillis) {
         String template = plugin.getConfig().getString(
                 "bossbar.title",
-                "&5Dragao do End &7- &e{time} &7para matar"
+                "&5Dragão do End &7- &e{time} &7para matar"
         );
         if (template == null || template.isBlank()) {
-            template = "&5Dragao do End &7- &e{time} &7para matar";
+            template = "&5Dragão do End &7- &e{time} &7para matar";
         }
         return color(template.replace("{time}", formatDuration(remainingMillis)));
     }
@@ -646,7 +646,7 @@ final class DragonService implements Listener {
         String title = plugin.getConfig().getString("messages.defeat.title", "&5&lO DRAGAO ANCESTRAL CAIU");
         String killerLine = plugin.getConfig().getString(
                 "messages.defeat.killer-line",
-                "&d{killer} &7matou o Dragao do End."
+                "&d{killer} &7matou o Dragão do End."
         );
         String topHeader = plugin.getConfig().getString("messages.defeat.top-header", "&7Top dano causado:");
         String topLine = plugin.getConfig().getString(
@@ -661,8 +661,8 @@ final class DragonService implements Listener {
         if (separator != null && !separator.isBlank()) {
             lines.add(color(separator));
         }
-        lines.add(color(Objects.requireNonNullElse(title, "&5&lO DRAGAO ANCESTRAL CAIU")));
-        lines.add(color(Objects.requireNonNullElse(killerLine, "&d{killer} &7matou o Dragao do End.")
+        lines.add(color(Objects.requireNonNullElse(title, "&5&lO DRAGÃO ANCESTRAL CAIU")));
+        lines.add(color(Objects.requireNonNullElse(killerLine, "&d{killer} &7matou o Dragão do End.")
                 .replace("{killer}", killer)));
         lines.add(color(Objects.requireNonNullElse(topHeader, "&7Top dano causado:")));
 
@@ -870,7 +870,9 @@ final class DragonService implements Listener {
 
     private String formatChampionNpcName(ChampionPlayer champion) {
         String template = plugin.getConfig().getString("champion-npc.name", "{player}");
-        if (template == null || template.isBlank() || template.equalsIgnoreCase("&5Campeao do Dragao: &f{player}")) {
+        if (template == null || template.isBlank()
+                || template.equalsIgnoreCase("&5Campeao do Dragao: &f{player}")
+                || template.equalsIgnoreCase("&5Campeão do Dragão: &f{player}")) {
             template = "{player}";
         }
         return color(template.replace("{player}", champion.playerName()));
@@ -918,7 +920,7 @@ final class DragonService implements Listener {
                     ? Bukkit.getOfflinePlayer(champion.playerName())
                     : Bukkit.getOfflinePlayer(champion.playerId());
             skullMeta.setOwningPlayer(owner);
-            skullMeta.setDisplayName(color("&5Cabeca de &f" + champion.playerName()));
+            skullMeta.setDisplayName(color("&5Cabeça de &f" + champion.playerName()));
             head.setItemMeta(skullMeta);
         }
         return head;
@@ -1032,7 +1034,7 @@ final class DragonService implements Listener {
     }
 
     private String formatSpawnMessage(Location location) {
-        String raw = plugin.getConfig().getString("messages.spawn", "&dUm Dragao do End nasceu.");
+        String raw = plugin.getConfig().getString("messages.spawn", "&dUm Dragão do End nasceu.");
         return prefix() + color(raw)
                 .replace("{world}", location.getWorld() == null ? "mundo-desconhecido" : location.getWorld().getName())
                 .replace("{x}", String.format(Locale.US, "%.1f", location.getX()))
@@ -1043,7 +1045,7 @@ final class DragonService implements Listener {
     private String formatExpireMessage(Location location) {
         String raw = plugin.getConfig().getString(
                 "messages.expire",
-                "&cO Dragao do End desapareceu porque o tempo de &f{time}&c acabou."
+                "&cO Dragão do End desapareceu porque o tempo de &f{time}&c acabou."
         );
         return prefix() + color(raw)
                 .replace("{time}", formatKillTime())

@@ -1,5 +1,5 @@
 name: EnderDragonSpawnerPlugin
-version: 1.15.0
+version: 1.16.0
 main: com.codex.enddragonsafespawner.EndDragonSafeSpawnerPlugin
 api-version: '1.21.11'
 author: Codex
@@ -8,11 +8,11 @@ prefix: EnderDragon Spawner Plugin
 
 commands:
   dragaoend:
-    description: Configura e controla o spawn seguro do Dragao do End.
+    description: Configura e controla o spawn seguro do Dragão do End.
     usage: /dragaoend help
     aliases: [eds, enddragonspawn, dragao]
     permission: enddragonsafe.admin
-    permission-message: "Voce nao tem permissao para usar este comando."
+    permission-message: "Você não tem permissão para usar este comando."
 
 permissions:
   enddragonsafe.admin:

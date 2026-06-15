@@ -3,7 +3,7 @@
 
 enabled: true
 
-# Mundo onde o dragao nasce. Precisa ser um mundo do tipo THE_END.
+# Mundo onde o dragão nasce. Precisa ser um mundo do tipo THE_END.
 world: world_the_end
 
 spawn:
@@ -16,11 +16,11 @@ spawn:
 # Aceita qualquer valor em horas. Ex: 3.0 = de 3h em 3h, 5.0 = de 5h em 5h.
 interval-hours: 3.0
 
-# Evita acumular varios dragoes se ainda existir um Ender Dragon vivo no mundo configurado.
+# Evita acumular vários dragões se ainda existir um Ender Dragon vivo no mundo configurado.
 skip-if-dragon-alive: true
 
-# O plugin spawna o dragao diretamente, sem usar o ritual vanilla de respawn.
-# Esta protecao impede o dragao de quebrar qualquer bloco, de qualquer tipo.
+# O plugin spawna o dragão diretamente, sem usar o ritual vanilla de respawn.
+# Esta proteção impede o dragão de quebrar qualquer bloco, de qualquer tipo.
 block-protection:
   enabled: true
   only-plugin-dragons: true
@@ -29,18 +29,18 @@ announce-spawn: true
 announce-expire: true
 
 dragon:
-  # O nome aceita {time}, que vira o cronometro restante.
+  # O nome aceita {time}, que vira o cronômetro restante.
   countdown-name: true
-  custom-name: "&5Dragao do End &7- &e{time}"
+  custom-name: "&5Dragão do End &7- &e{time}"
   custom-name-visible: true
-  # Tempo que os players tem para matar o dragao. Se acabar, ele desaparece.
+  # Tempo que os players têm para matar o dragão. Se acabar, ele desaparece.
   kill-time-minutes: 15.0
 
 sounds:
   dragon-death:
-    # Remove o som de morte quando o dragao desaparece porque o tempo acabou.
+    # Remove o som de morte quando o dragão desaparece porque o tempo acabou.
     stop-on-timeout: true
-    # Mantem o corte do som por alguns ticks, porque o som vanilla pode chegar com atraso no cliente.
+    # Mantém o corte do som por alguns ticks, porque o som vanilla pode chegar com atraso no cliente.
     timeout-stop-ticks: 80
     # Na morte normal, o plugin para o som vanilla alto e toca o mesmo som mais baixo.
     reduce-normal-kill: true
@@ -52,27 +52,27 @@ sounds:
 
 bossbar:
   enabled: true
-  # O titulo aceita {time}, que vira o cronometro restante.
-  title: "&5Dragao do End &7- &e{time} &7para matar"
-  # O texto mostra o tempo, mas o preenchimento da barra mostra a vida atual do dragao.
+  # O título aceita {time}, que vira o cronômetro restante.
+  title: "&5Dragão do End &7- &e{time} &7para matar"
+  # O texto mostra o tempo, mas o preenchimento da barra mostra a vida atual do dragão.
   progress-mode: HEALTH
   # Cores: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
   color: PURPLE
   # Estilos: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
   style: SOLID
-  # false = aparece so para players no mundo do dragao. true = aparece para todo mundo online.
+  # false = aparece só para players no mundo do dragão. true = aparece para todo mundo online.
   show-to-all-online: false
 
 rewards:
   top1:
     enabled: false
-    # Use /dragaoend setreward top1 segurando o item na mao para preencher este item.
+    # Use /dragaoend setreward top1 segurando o item na mão para preencher este item.
     item: null
     message: "&d{player} &7recebeu a recompensa de top 1: &f{item}&7 x{amount}."
 
 champion-npc:
   enabled: false
-  # Se true, sempre que um dragao for morto por jogadores, o armor stand muda para o novo matador.
+  # Se true, sempre que um dragão for morto por jogadores, o armor stand muda para o novo matador.
   update-on-defeat: true
   name: "{player}"
   gravity: false
@@ -88,18 +88,18 @@ champion-npc:
     name: ""
 
 messages:
-  prefix: "&5[DragaoEnd]&r "
-  spawn: "&dUm Dragao do End nasceu em &f{world} &7(&f{x}, {y}, {z}&7)&d."
-  expire: "&cO Dragao do End desapareceu porque o tempo de &f{time}&c acabou."
+  prefix: "&5[DragãoEnd]&r "
+  spawn: "&dUm Dragão do End nasceu em &f{world} &7(&f{x}, {y}, {z}&7)&d."
+  expire: "&cO Dragão do End desapareceu porque o tempo de &f{time}&c acabou."
   defeat:
     enabled: true
     separator: "&8&m--------------------------"
-    title: "&5&lO DRAGAO ANCESTRAL CAIU"
-    killer-line: "&d{killer} &7matou o Dragao do End."
+    title: "&5&lO DRAGÃO ANCESTRAL CAIU"
+    killer-line: "&d{killer} &7matou o Dragão do End."
     top-header: "&7Top dano causado:"
     top-line: "&5#{position} &f{player} &7- &c{damage} dano"
     no-damage-line: "&7Nenhum dano de player foi registrado."
 
 scheduler:
-  # Epoch millis do proximo spawn. O plugin atualiza sozinho.
+  # Epoch millis do próximo spawn. O plugin atualiza sozinho.
   next-spawn-at: 0

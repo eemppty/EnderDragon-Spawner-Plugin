@@ -33,7 +33,7 @@ public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
         DragonCommand dragonCommand = new DragonCommand(this, this.dragonService, this.dragonScheduler);
         PluginCommand command = getCommand("dragaoend");
         if (command == null) {
-            getLogger().severe("Comando /dragaoend nao foi encontrado no plugin.yml.");
+            getLogger().severe("Comando /dragaoend não foi encontrado no plugin.yml.");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -73,7 +73,7 @@ public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
             Files.copy(legacyConfig.toPath(), newConfig.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
             getLogger().info("Config antiga de EndDragonSafeSpawner migrada para EnderDragonSpawnerPlugin.");
         } catch (IOException exception) {
-            getLogger().warning("Nao foi possivel migrar a config antiga: " + exception.getMessage());
+            getLogger().warning("Não foi possível migrar a config antiga: " + exception.getMessage());
         }
     }
 }

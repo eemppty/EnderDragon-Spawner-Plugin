@@ -42,7 +42,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission(EndDragonSafeSpawnerPlugin.ADMIN_PERMISSION)) {
-            sender.sendMessage(dragonService.prefix() + "Voce nao tem permissao.");
+            sender.sendMessage(dragonService.prefix() + "Você não tem permissão.");
             return true;
         }
 
@@ -154,16 +154,16 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
         sender.sendMessage(dragonService.prefix() + "Status:");
         sender.sendMessage("Ativo: " + plugin.getConfig().getBoolean("enabled", true));
-        sender.sendMessage("Spawn: " + (location == null ? "invalido" : dragonService.formatLocation(location)));
+        sender.sendMessage("Spawn: " + (location == null ? "inválido" : dragonService.formatLocation(location)));
         sender.sendMessage("Intervalo: " + dragonScheduler.formatInterval());
         sender.sendMessage("Tempo para matar: " + dragonService.formatKillTime());
-        sender.sendMessage("Proximo spawn: " + dragonScheduler.formatNextSpawn());
+        sender.sendMessage("Próximo spawn: " + dragonScheduler.formatNextSpawn());
         sender.sendMessage("Boss bar: " + dragonService.isBossBarEnabled());
-        sender.sendMessage("Dragoes vivos nesse mundo: " + dragons);
-        sender.sendMessage("Dragoes do plugin nesse mundo: " + pluginDragons);
-        sender.sendMessage("Protecao de blocos: " + dragonService.isBlockProtectionEnabled());
+        sender.sendMessage("Dragões vivos nesse mundo: " + dragons);
+        sender.sendMessage("Dragões do plugin nesse mundo: " + pluginDragons);
+        sender.sendMessage("Proteção de blocos: " + dragonService.isBlockProtectionEnabled());
         sender.sendMessage("Recompensa top 1: " + dragonService.describeTopOneReward());
-        sender.sendMessage("NPC campeao: " + dragonService.describeChampionNpc());
+        sender.sendMessage("NPC campeão: " + dragonService.describeChampionNpc());
     }
 
     private void spawn(CommandSender sender, String[] args) {
@@ -175,16 +175,16 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
     private void kill(CommandSender sender, String[] args) {
         Location location = dragonService.getConfiguredLocation();
         if (location == null || location.getWorld() == null) {
-            sender.sendMessage(dragonService.prefix() + "Mundo configurado nao existe ou nao e um mundo do End.");
+            sender.sendMessage(dragonService.prefix() + "Mundo configurado não existe ou não é um mundo do End.");
             return;
         }
 
         boolean includeVanillaDragons = args.length >= 2 && matches(args[1], "todos", "all", "tudo");
         int removed = dragonService.removeDragons(location.getWorld(), includeVanillaDragons);
         if (includeVanillaDragons) {
-            sender.sendMessage(dragonService.prefix() + "Dragoes removidos do mundo configurado: " + removed + ".");
+            sender.sendMessage(dragonService.prefix() + "Dragões removidos do mundo configurado: " + removed + ".");
         } else {
-            sender.sendMessage(dragonService.prefix() + "Dragoes criados pelo plugin removidos: " + removed
+            sender.sendMessage(dragonService.prefix() + "Dragões criados pelo plugin removidos: " + removed
                     + ". Use /dragaoend matar todos para remover qualquer Ender Dragon vivo nesse mundo.");
         }
     }
@@ -197,13 +197,13 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
         Long millis = parseDurationMillis(args[1]);
         if (millis == null || millis < 60_000L) {
-            sender.sendMessage(dragonService.prefix() + "Tempo invalido. Use algo como 10m, 30m, 90m, 3h ou 5h.");
+            sender.sendMessage(dragonService.prefix() + "Tempo inválido. Use algo como 10m, 30m, 90m, 3h ou 5h.");
             return;
         }
 
         dragonScheduler.setIntervalMillis(millis);
         sender.sendMessage(dragonService.prefix() + "Intervalo configurado para " + dragonScheduler.formatInterval()
-                + ". Proximo spawn: " + dragonScheduler.formatNextSpawn() + ".");
+                + ". Próximo spawn: " + dragonScheduler.formatNextSpawn() + ".");
     }
 
     private void setKillTime(CommandSender sender, String[] args) {
@@ -214,14 +214,14 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
         Long millis = parseDurationMillis(args[1]);
         if (millis == null || millis < 10_000L) {
-            sender.sendMessage(dragonService.prefix() + "Tempo invalido. Use algo como 5m, 15m, 30m ou 1h.");
+            sender.sendMessage(dragonService.prefix() + "Tempo inválido. Use algo como 5m, 15m, 30m ou 1h.");
             return;
         }
 
         dragonService.setKillTimeMillis(millis);
         sender.sendMessage(dragonService.prefix() + "Tempo para matar configurado para "
                 + dragonService.formatKillTime()
-                + ". Dragoes ja vivos continuam com o prazo atual; os proximos usam esse novo tempo.");
+                + ". Dragões já vivos continuam com o prazo atual; os próximos usam esse novo tempo.");
     }
 
     private void reward(CommandSender sender, String[] args) {
@@ -255,7 +255,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
         ItemStack handItem = player.getInventory().getItemInMainHand();
         if (handItem.getType() == Material.AIR || handItem.getAmount() <= 0) {
-            sender.sendMessage(dragonService.prefix() + "Segure o item da recompensa na mao principal.");
+            sender.sendMessage(dragonService.prefix() + "Segure o item da recompensa na mão principal.");
             return;
         }
 
@@ -287,7 +287,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
     private void championNpc(CommandSender sender, String[] args) {
         if (args.length < 2 || matches(args[1], "status")) {
-            sender.sendMessage(dragonService.prefix() + "NPC campeao: " + dragonService.describeChampionNpc() + ".");
+            sender.sendMessage(dragonService.prefix() + "NPC campeão: " + dragonService.describeChampionNpc() + ".");
             return;
         }
 
@@ -299,20 +299,20 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
         if (matches(args[1], "remove", "clear", "remover")) {
             int removed = dragonService.removeChampionNpcDisplays();
             sender.sendMessage(dragonService.prefix() + "NPCs campeoes removidos do mundo: " + removed
-                    + ". O local continua salvo; no proximo dragao morto ele volta atualizado.");
+                    + ". O local continua salvo; no próximo dragão morto ele volta atualizado.");
             return;
         }
 
         if (matches(args[1], "on", "enable", "ativar", "ligar")) {
             dragonService.setChampionNpcEnabled(true);
-            sender.sendMessage(dragonService.prefix() + "NPC campeao ativado. Status: "
+            sender.sendMessage(dragonService.prefix() + "NPC campeão ativado. Status: "
                     + dragonService.describeChampionNpc() + ".");
             return;
         }
 
         if (matches(args[1], "off", "disable", "desativar", "desligar")) {
             dragonService.setChampionNpcEnabled(false);
-            sender.sendMessage(dragonService.prefix() + "NPC campeao desativado e removido.");
+            sender.sendMessage(dragonService.prefix() + "NPC campeão desativado e removido.");
             return;
         }
 
@@ -327,12 +327,12 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
         Location location = dragonService.saveChampionNpcLocation(player.getLocation(), player);
         if (location == null) {
-            sender.sendMessage(dragonService.prefix() + "Nao foi possivel salvar o local do NPC campeao.");
+            sender.sendMessage(dragonService.prefix() + "Não foi possível salvar o local do NPC campeão.");
             return;
         }
-        sender.sendMessage(dragonService.prefix() + "NPC campeao configurado em "
+        sender.sendMessage(dragonService.prefix() + "NPC campeão configurado em "
                 + dragonService.formatLocation(location)
-                + " no centro do bloco e olhando para a mesma direcao que voce.");
+                + " no centro do bloco e olhando para a mesma direção que você.");
     }
 
     private void setCoords(CommandSender sender, String[] args) {
@@ -351,7 +351,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
         Double y = parseCoordinate(sender, args[2], 'y');
         Double z = parseCoordinate(sender, args[3], 'z');
         if (x == null || y == null || z == null) {
-            sender.sendMessage(dragonService.prefix() + "Coordenadas invalidas.");
+            sender.sendMessage(dragonService.prefix() + "Coordenadas inválidas.");
             return;
         }
 
@@ -370,26 +370,26 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
         Location location = player.getLocation();
         if (!dragonService.isValidEndWorld(location.getWorld())) {
-            sender.sendMessage(dragonService.prefix() + "Voce precisa estar em um mundo do End.");
+            sender.sendMessage(dragonService.prefix() + "Você precisa estar em um mundo do End.");
             return;
         }
 
         dragonService.saveSpawn(location);
         dragonScheduler.resetTimer();
-        sender.sendMessage(dragonService.prefix() + "Spawn configurado para sua posicao: "
+        sender.sendMessage(dragonService.prefix() + "Spawn configurado para sua posição: "
                 + dragonService.formatLocation(location) + ".");
     }
 
     private void reset(CommandSender sender) {
         dragonScheduler.resetTimer();
-        sender.sendMessage(dragonService.prefix() + "Contador reiniciado. Proximo spawn: "
+        sender.sendMessage(dragonService.prefix() + "Contador reiniciado. Próximo spawn: "
                 + dragonScheduler.formatNextSpawn() + ".");
     }
 
     private void reload(CommandSender sender) {
         dragonScheduler.reload();
         dragonService.refreshChampionNpcFromConfig();
-        sender.sendMessage(dragonService.prefix() + "Config recarregada. Proximo spawn: "
+        sender.sendMessage(dragonService.prefix() + "Config recarregada. Próximo spawn: "
                 + dragonScheduler.formatNextSpawn() + ".");
     }
 
