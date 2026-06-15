@@ -29,28 +29,49 @@ Historico de updates: veja `CHANGELOG.md`.
 
 ## Comandos
 
+### Comandos gerais
+
 - `/dragaoend help` - mostra a ajuda.
 - `/dragaoend status` - mostra mundo, coordenadas, intervalo e proximo spawn.
+- `/dragaoend reload` - recarrega a config.
+
+### Comandos de tempo e agendamento
+
 - `/dragaoend setinterval <tempo>` - configura o intervalo. Exemplos: `10m`, `30m`, `90m`, `3`, `3h`, `5h`, `1.5h`.
 - `/dragaoend setkilltime <tempo>` - configura quanto tempo os players tem para matar o dragao. Exemplos: `5m`, `15m`, `30m`, `1h`.
+- `/dragaoend reset` - reinicia o contador a partir de agora.
+- `/dragaoend enable` / `/dragaoend disable` - ativa ou desativa o agendamento.
+
+### Comandos de spawn e local
+
 - `/dragaoend setcoords <x> <y> <z> [mundo]` - configura as coordenadas do spawn.
 - `/dragaoend sethere` - usa sua posicao atual como spawn. Precisa estar no End.
 - `/dragaoend nascer` - spawna manualmente se nao houver dragao vivo.
 - `/dragaoend nascer force` - spawna manualmente mesmo se ja houver outro dragao.
 - `/dragaoend spawn` - spawna manualmente se nao houver dragao vivo.
 - `/dragaoend spawn force` - spawna manualmente mesmo se ja houver outro dragao.
+
+### Comandos para matar ou remover dragoes
+
 - `/dragaoend matar` - remove os dragoes criados pelo plugin no mundo configurado.
 - `/dragaoend matar todos` - remove qualquer Ender Dragon vivo no mundo configurado.
+
+### Comandos de boss bar
+
 - `/dragaoend bossbar on` / `/dragaoend bossbar off` - ativa ou desativa a boss bar do cronometro.
+
+### Comandos de NPC campeao
+
 - `/dragaoend npc set` - salva sua posicao e direcao como local fixo do NPC campeao.
 - `/dragaoend npc status` - mostra o local e o jogador salvo no NPC campeao.
 - `/dragaoend npc remove` - remove o armor stand atual, mantendo o local salvo para o proximo dragao morto.
 - `/dragaoend npc on` / `/dragaoend npc off` - ativa ou desativa o NPC campeao.
+- `/dragaoend setnpc` - atalho para salvar o local do NPC campeao.
+
+### Comandos de recompensa
+
 - `/dragaoend setreward top1` - segurando um item na mao, salva esse item como recompensa do top 1 de dano.
 - `/dragaoend clearreward top1` - remove a recompensa do top 1.
-- `/dragaoend reset` - reinicia o contador a partir de agora.
-- `/dragaoend reload` - recarrega a config.
-- `/dragaoend enable` / `/dragaoend disable` - ativa ou desativa o agendamento.
 
 Permissao: `enddragonsafe.admin` (padrao: OP).
 
