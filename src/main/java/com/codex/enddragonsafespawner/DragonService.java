@@ -18,6 +18,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -352,6 +353,7 @@ final class DragonService implements Listener {
             return;
         }
 
+        Location deathLocation = dragon.getLocation().clone();
         markTimeExpiredDeath(dragon);
         removeBossBar(dragonId);
         clearCombatData(dragonId);
@@ -364,6 +366,7 @@ final class DragonService implements Listener {
         } else {
             dragon.remove();
         }
+        suppressTimeExpiredDeathSound(deathLocation);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Entity entity = Bukkit.getEntity(dragonId);
@@ -696,6 +699,72 @@ final class DragonService implements Listener {
         return itemStack.getType().name().toLowerCase(Locale.ROOT).replace('_', ' ');
     }
 
+    private void suppressTimeExpiredDeathSound(Location location) {
+        if (!plugin.getConfig().getBoolean("sounds.dragon-death.stop-on-timeout", true)) {
+            return;
+        }
+
+        Location soundLocation = location.clone();
+        int stopTicks = Math.max(1, plugin.getConfig().getInt("sounds.dragon-death.timeout-stop-ticks", 80));
+        stopDragonDeathSound(soundLocation);
+        for (int delay = 1; delay <= stopTicks; delay += 2) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> stopDragonDeathSound(soundLocation), delay);
+        }
+    }
+
+    private void reduceNormalKillDeathSound(Location location) {
+        if (!plugin.getConfig().getBoolean("sounds.dragon-death.reduce-normal-kill", true)) {
+            return;
+        }
+
+        Location soundLocation = location.clone();
+        stopDragonDeathSound(soundLocation);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            stopDragonDeathSound(soundLocation);
+            playReducedDragonDeathSound(soundLocation);
+        });
+    }
+
+    private void stopDragonDeathSound(Location location) {
+        for (Player player : getSoundTargetPlayers(location)) {
+            player.stopSound(Sound.ENTITY_ENDER_DRAGON_DEATH);
+            player.stopSound(Sound.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.HOSTILE);
+        }
+    }
+
+    private void playReducedDragonDeathSound(Location location) {
+        float volume = clampSoundValue(plugin.getConfig().getDouble("sounds.dragon-death.normal-kill-volume", 0.35), 0.0F, 4.0F);
+        if (volume <= 0.0F) {
+            return;
+        }
+
+        float pitch = clampSoundValue(plugin.getConfig().getDouble("sounds.dragon-death.normal-kill-pitch", 1.0), 0.5F, 2.0F);
+        for (Player player : getSoundTargetPlayers(location)) {
+            player.playSound(location, Sound.ENTITY_ENDER_DRAGON_DEATH, SoundCategory.HOSTILE, volume, pitch);
+        }
+    }
+
+    private List<? extends Player> getSoundTargetPlayers(Location location) {
+        World world = location.getWorld();
+        boolean allOnline = plugin.getConfig().getBoolean("sounds.dragon-death.apply-to-all-online", false);
+        double radius = plugin.getConfig().getDouble("sounds.dragon-death.radius-blocks", 512.0);
+        double radiusSquared = radius * radius;
+
+        return Bukkit.getOnlinePlayers().stream()
+                .filter(player -> allOnline
+                        || (world != null
+                        && player.getWorld().equals(world)
+                        && (radius <= 0.0 || player.getLocation().distanceSquared(location) <= radiusSquared)))
+                .toList();
+    }
+
+    private float clampSoundValue(double value, float min, float max) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return min;
+        }
+        return (float) Math.max(min, Math.min(max, value));
+    }
+
     private void updateChampionNpcOnDefeat(EnderDragon dragon, List<DamageEntry> topDamage) {
         if (!isChampionNpcEnabled() || !plugin.getConfig().getBoolean("champion-npc.update-on-defeat", true)) {
             return;
@@ -934,6 +1003,7 @@ final class DragonService implements Listener {
         if (entity instanceof EnderDragon dragon && isPluginDragon(dragon)) {
             removeBossBar(dragon.getUniqueId());
             if (isTimeExpiredDeath(dragon.getUniqueId(), System.currentTimeMillis())) {
+                suppressTimeExpiredDeathSound(dragon.getLocation());
                 event.getDrops().clear();
                 event.setDroppedExp(0);
                 clearCombatData(dragon.getUniqueId());
@@ -944,6 +1014,7 @@ final class DragonService implements Listener {
             }
 
             List<DamageEntry> topDamage = getTopDamage(dragon.getUniqueId());
+            reduceNormalKillDeathSound(dragon.getLocation());
             updateChampionNpcOnDefeat(dragon, topDamage);
             giveTopOneReward(topDamage);
             announceDefeat(dragon);

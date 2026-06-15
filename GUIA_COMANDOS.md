@@ -4,7 +4,7 @@ Plugin para Paper 1.21.11 que spawna um Dragao do End automaticamente no End, co
 
 ## Instalacao
 
-1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar` na pasta `plugins/`.
+1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.15.0-paper-1.21.11.jar` na pasta `plugins/`.
 2. Reinicie o servidor.
 3. O plugin vai criar a config em:
 
@@ -307,6 +307,26 @@ interval-hours: 3.0
 dragon:
   kill-time-minutes: 15.0
 ```
+
+### Som da morte do dragao
+
+```yml
+sounds:
+  dragon-death:
+    stop-on-timeout: true
+    timeout-stop-ticks: 80
+    reduce-normal-kill: true
+    normal-kill-volume: 0.35
+    normal-kill-pitch: 1.0
+    apply-to-all-online: false
+    radius-blocks: 512.0
+```
+
+`stop-on-timeout: true` corta o som de morte quando o dragao desaparece porque o tempo acabou.
+
+`normal-kill-volume: 0.35` deixa a morte normal mais baixa quando os jogadores matam o dragao. Para aumentar ou diminuir, edite esse valor pela host e use `/dragaoend reload`.
+
+`apply-to-all-online: false` aplica o ajuste apenas para jogadores no mesmo mundo e dentro do raio configurado.
 
 ### Protecao de blocos
 

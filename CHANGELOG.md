@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.15.0
+
+- Removido o som de morte do Ender Dragon quando ele desaparece por tempo.
+- Morte normal por jogadores continua com som, mas em volume menor.
+- Adicionada configuracao `sounds.dragon-death.normal-kill-volume`.
+- Adicionada configuracao `sounds.dragon-death.stop-on-timeout`.
+
 ## 1.14.0
 
 - Ajustado `/dragaoend setnpc` e `/dragaoend npc set` para salvar o armor stand no centro do bloco.

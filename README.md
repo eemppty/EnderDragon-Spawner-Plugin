@@ -2,18 +2,18 @@
 
 Plugin Paper 1.21.11 para spawnar Ender Dragons no End em um intervalo configuravel, sem usar o ritual vanilla de respawn e sem quebrar blocos.
 
-## Novidades da versao 1.14.0
+## Novidades da versao 1.15.0
 
-- `/dragaoend setnpc` e `/dragaoend npc set` agora colocam o armor stand exatamente no centro do bloco.
-- O NPC campeao continua olhando para a mesma direcao do player que usou o comando.
-- O nome acima do NPC agora mostra apenas o nick do jogador que matou o dragao.
-- A config padrao do NPC agora usa `champion-npc.name: "{player}"`.
+- Quando o dragao desaparece por tempo, o plugin corta o som de morte do Ender Dragon.
+- Quando jogadores matam o dragao normalmente, o plugin troca o som vanilla alto por um som de morte mais baixo.
+- O volume da morte normal pode ser ajustado em `sounds.dragon-death.normal-kill-volume`.
+- Nao adiciona nenhuma dependencia extra.
 
 ## Download
 
 Baixe o plugin aqui:
 
-[EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar](https://github.com/eemppty/EnderDragon-Spawner-Plugin/releases/download/v1.14.0/EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar)
+[EnderDragon-Spawner-Plugin-1.15.0-paper-1.21.11.jar](https://github.com/eemppty/EnderDragon-Spawner-Plugin/releases/download/v1.15.0/EnderDragon-Spawner-Plugin-1.15.0-paper-1.21.11.jar)
 
 Depois coloque o arquivo `.jar` na pasta `plugins/` do servidor.
 
@@ -23,7 +23,7 @@ Historico de updates: veja `CHANGELOG.md`.
 
 ## Instalar
 
-1. Coloque `EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar` na pasta `plugins/` do servidor Paper 1.21.11.
+1. Coloque `EnderDragon-Spawner-Plugin-1.15.0-paper-1.21.11.jar` na pasta `plugins/` do servidor Paper 1.21.11.
 2. Reinicie o servidor.
 3. Ajuste com os comandos abaixo ou edite `plugins/EnderDragonSpawnerPlugin/config.yml`.
 
@@ -65,6 +65,8 @@ Por padrao, cada dragao nasce com 15 minutos para ser morto. O nome dele mostra 
 A boss bar tambem mostra o cronometro no titulo, mas o preenchimento da barra representa a vida atual do dragao. Ela pode ser configurada em `plugins/EnderDragonSpawnerPlugin/config.yml`, na secao `bossbar`.
 
 Quando o tempo chega no final, o plugin mata o dragao usando a animacao vanilla de morte. Essa morte e marcada como expirada por tempo: nao anuncia top dano, nao entrega XP, nao deixa drops, cancela ovo/portal do dragao quando a API dispara esses eventos, e mostra apenas a mensagem de desaparecimento por tempo.
+
+Na versao 1.15.0, essa morte por tempo tambem corta o som de morte do Ender Dragon. Ja a morte normal por players continua com som, mas em volume menor configuravel.
 
 ## Mensagem de vitoria
 

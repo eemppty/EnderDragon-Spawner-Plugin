@@ -36,6 +36,20 @@ dragon:
   # Tempo que os players tem para matar o dragao. Se acabar, ele desaparece.
   kill-time-minutes: 15.0
 
+sounds:
+  dragon-death:
+    # Remove o som de morte quando o dragao desaparece porque o tempo acabou.
+    stop-on-timeout: true
+    # Mantem o corte do som por alguns ticks, porque o som vanilla pode chegar com atraso no cliente.
+    timeout-stop-ticks: 80
+    # Na morte normal, o plugin para o som vanilla alto e toca o mesmo som mais baixo.
+    reduce-normal-kill: true
+    normal-kill-volume: 0.35
+    normal-kill-pitch: 1.0
+    # false = afeta jogadores no mesmo mundo e dentro do raio. true = afeta todos online.
+    apply-to-all-online: false
+    radius-blocks: 512.0
+
 bossbar:
   enabled: true
   # O titulo aceita {time}, que vira o cronometro restante.
