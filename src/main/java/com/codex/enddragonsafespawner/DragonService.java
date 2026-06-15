@@ -233,19 +233,20 @@ final class DragonService implements Listener {
         return plugin.getConfig().getBoolean("champion-npc.enabled", false);
     }
 
-    void saveChampionNpcLocation(Location location, Player previewPlayer) {
+    Location saveChampionNpcLocation(Location location, Player previewPlayer) {
         World world = location.getWorld();
         if (world == null) {
-            return;
+            return null;
         }
 
+        Location centeredLocation = centerChampionNpcLocation(location);
         plugin.getConfig().set("champion-npc.enabled", true);
         plugin.getConfig().set("champion-npc.world", world.getName());
-        plugin.getConfig().set("champion-npc.x", round(location.getX()));
-        plugin.getConfig().set("champion-npc.y", round(location.getY()));
-        plugin.getConfig().set("champion-npc.z", round(location.getZ()));
-        plugin.getConfig().set("champion-npc.yaw", round(location.getYaw()));
-        plugin.getConfig().set("champion-npc.pitch", round(location.getPitch()));
+        plugin.getConfig().set("champion-npc.x", round(centeredLocation.getX()));
+        plugin.getConfig().set("champion-npc.y", round(centeredLocation.getY()));
+        plugin.getConfig().set("champion-npc.z", round(centeredLocation.getZ()));
+        plugin.getConfig().set("champion-npc.yaw", round(centeredLocation.getYaw()));
+        plugin.getConfig().set("champion-npc.pitch", round(centeredLocation.getPitch()));
 
         ChampionPlayer champion = readStoredChampion();
         if (champion == null) {
@@ -254,6 +255,7 @@ final class DragonService implements Listener {
         saveLastChampion(champion);
         plugin.saveConfig();
         spawnChampionNpc(champion);
+        return centeredLocation;
     }
 
     void setChampionNpcEnabled(boolean enabled) {
@@ -798,11 +800,22 @@ final class DragonService implements Listener {
     }
 
     private String formatChampionNpcName(ChampionPlayer champion) {
-        String template = plugin.getConfig().getString("champion-npc.name", "&5Campeao do Dragao: &f{player}");
-        if (template == null || template.isBlank()) {
-            template = "&5Campeao do Dragao: &f{player}";
+        String template = plugin.getConfig().getString("champion-npc.name", "{player}");
+        if (template == null || template.isBlank() || template.equalsIgnoreCase("&5Campeao do Dragao: &f{player}")) {
+            template = "{player}";
         }
         return color(template.replace("{player}", champion.playerName()));
+    }
+
+    private Location centerChampionNpcLocation(Location location) {
+        return new Location(
+                location.getWorld(),
+                Math.floor(location.getX()) + 0.5,
+                Math.floor(location.getY()),
+                Math.floor(location.getZ()) + 0.5,
+                location.getYaw(),
+                location.getPitch()
+        );
     }
 
     private void applyChampionNpcPose(ArmorStand armorStand) {

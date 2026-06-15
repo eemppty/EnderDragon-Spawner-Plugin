@@ -4,7 +4,7 @@ Plugin para Paper 1.21.11 que spawna um Dragao do End automaticamente no End, co
 
 ## Instalacao
 
-1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.13.0-paper-1.21.11.jar` na pasta `plugins/`.
+1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar` na pasta `plugins/`.
 2. Reinicie o servidor.
 3. O plugin vai criar a config em:
 
@@ -169,12 +169,12 @@ Salvar o local do NPC:
 /dragaoend npc set
 ```
 
-Use esse comando parado no local onde o armor stand deve ficar. O plugin salva mundo, coordenadas e a direcao que voce estava olhando.
+Use esse comando parado no bloco onde o armor stand deve ficar. O plugin salva mundo, coloca o armor stand exatamente no centro do bloco, e usa a direcao que voce estava olhando.
 
 Depois disso, sempre que um dragao for morto por jogadores, o NPC desse local muda para o matador do dragao:
 
 - cabeca do player
-- nick acima do armor stand
+- apenas o nick acima do armor stand
 - peitoral, calca e bota de netherite
 - espada de netherite na mao
 - pose pronta de campeao
@@ -357,7 +357,7 @@ Para itens simples, da para editar pela host. Para item com nome, lore ou encant
 champion-npc:
   enabled: true
   update-on-defeat: true
-  name: "&5Campeao do Dragao: &f{player}"
+  name: "{player}"
   gravity: false
   invulnerable: true
   world: world
@@ -371,7 +371,7 @@ champion-npc:
     name: ""
 ```
 
-O jeito mais facil e usar `/dragaoend npc set`, porque ele ja salva a posicao e a direcao certinhas.
+O jeito mais facil e usar `/dragaoend npc set`, porque ele ja centraliza o armor stand no bloco e salva a direcao certinha.
 
 ## Comportamento do dragao
 

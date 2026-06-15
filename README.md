@@ -6,7 +6,7 @@ Plugin Paper 1.21.11 para spawnar Ender Dragons no End em um intervalo configura
 
 Baixe o plugin aqui:
 
-[EnderDragon-Spawner-Plugin-1.13.0-paper-1.21.11.jar](https://github.com/eemppty/EnderDragon-Spawner-Plugin/releases/download/v1.13.0/EnderDragon-Spawner-Plugin-1.13.0-paper-1.21.11.jar)
+[EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar](https://github.com/eemppty/EnderDragon-Spawner-Plugin/releases/download/v1.14.0/EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar)
 
 Depois coloque o arquivo `.jar` na pasta `plugins/` do servidor.
 
@@ -14,7 +14,7 @@ Guia completo de comandos: veja `GUIA_COMANDOS.md`.
 
 ## Instalar
 
-1. Coloque `EnderDragon-Spawner-Plugin-1.13.0-paper-1.21.11.jar` na pasta `plugins/` do servidor Paper 1.21.11.
+1. Coloque `EnderDragon-Spawner-Plugin-1.14.0-paper-1.21.11.jar` na pasta `plugins/` do servidor Paper 1.21.11.
 2. Reinicie o servidor.
 3. Ajuste com os comandos abaixo ou edite `plugins/EnderDragonSpawnerPlugin/config.yml`.
 
@@ -67,4 +67,4 @@ Um OP pode segurar um item na mao principal e usar `/dragaoend setreward top1`. 
 
 ## NPC campeao
 
-Use `/dragaoend npc set` parado no local onde voce quer deixar a estatua. O plugin salva o mundo, coordenadas, yaw e pitch do player. A partir dai, sempre que um dragao for morto por jogadores, o armor stand desse local troca para o matador do dragao: cabeca do player, nick acima, armadura full netherite sem capacete e espada de netherite na mao.
+Use `/dragaoend npc set` parado no bloco onde voce quer deixar a estatua. O plugin salva o mundo, centraliza o armor stand no meio do bloco, e usa a direcao do player. A partir dai, sempre que um dragao for morto por jogadores, o armor stand desse local troca para o matador do dragao: cabeca do player, apenas o nick acima, armadura full netherite sem capacete e espada de netherite na mao.

@@ -325,11 +325,14 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
-        Location location = player.getLocation();
-        dragonService.saveChampionNpcLocation(location, player);
+        Location location = dragonService.saveChampionNpcLocation(player.getLocation(), player);
+        if (location == null) {
+            sender.sendMessage(dragonService.prefix() + "Nao foi possivel salvar o local do NPC campeao.");
+            return;
+        }
         sender.sendMessage(dragonService.prefix() + "NPC campeao configurado em "
                 + dragonService.formatLocation(location)
-                + " olhando para a mesma direcao que voce.");
+                + " no centro do bloco e olhando para a mesma direcao que voce.");
     }
 
     private void setCoords(CommandSender sender, String[] args) {
