@@ -2,6 +2,13 @@
 
 Plugin Paper 1.21.11 para spawnar Ender Dragons no End em um intervalo configuravel, sem usar o ritual vanilla de respawn e sem quebrar blocos.
 
+## Novidades da versao 1.14.0
+
+- `/dragaoend setnpc` e `/dragaoend npc set` agora colocam o armor stand exatamente no centro do bloco.
+- O NPC campeao continua olhando para a mesma direcao do player que usou o comando.
+- O nome acima do NPC agora mostra apenas o nick do jogador que matou o dragao.
+- A config padrao do NPC agora usa `champion-npc.name: "{player}"`.
+
 ## Download
 
 Baixe o plugin aqui:
@@ -11,6 +18,8 @@ Baixe o plugin aqui:
 Depois coloque o arquivo `.jar` na pasta `plugins/` do servidor.
 
 Guia completo de comandos: veja `GUIA_COMANDOS.md`.
+
+Historico de updates: veja `CHANGELOG.md`.
 
 ## Instalar
 
