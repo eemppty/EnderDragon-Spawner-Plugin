@@ -22,7 +22,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
     private static final List<String> SUBCOMMANDS = List.of(
             "help", "status", "nascer", "matar", "spawn", "kill", "setinterval", "setcoords", "sethere",
             "setkilltime", "tempomatar", "setreward", "clearreward", "recompensa", "bossbar", "reset",
-            "reload", "enable", "disable"
+            "npc", "setnpc", "reload", "enable", "disable"
     );
 
     private final EndDragonSafeSpawnerPlugin plugin;
@@ -62,6 +62,8 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
             case "clearreward", "clearrecompensa" -> clearTopOneReward(sender, args);
             case "recompensa", "reward" -> reward(sender, args);
             case "bossbar" -> setBossBar(sender, args);
+            case "npc", "campeao" -> championNpc(sender, args);
+            case "setnpc", "setcampeao" -> setChampionNpc(sender);
             case "setcoords", "coords" -> setCoords(sender, args);
             case "sethere", "aqui" -> setHere(sender);
             case "reset" -> reset(sender);
@@ -111,6 +113,9 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
         if (args.length == 2 && subcommand.equals("bossbar")) {
             return filter(List.of("on", "off"), args[1]);
         }
+        if (args.length == 2 && matches(subcommand, "npc", "campeao")) {
+            return filter(List.of("set", "status", "remove", "on", "off"), args[1]);
+        }
         if (args.length >= 2 && args.length <= 4 && matches(subcommand, "setcoords", "coords")) {
             return filter(List.of("0", "~"), args[args.length - 1]);
         }
@@ -135,6 +140,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("/" + label + " nascer [force]");
         sender.sendMessage("/" + label + " matar [plugin|todos]");
         sender.sendMessage("/" + label + " bossbar <on|off>");
+        sender.sendMessage("/" + label + " npc set | status | remove | on | off");
         sender.sendMessage("/" + label + " setreward top1");
         sender.sendMessage("/" + label + " clearreward top1");
         sender.sendMessage("/" + label + " reset | reload | enable | disable");
@@ -157,6 +163,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("Dragoes do plugin nesse mundo: " + pluginDragons);
         sender.sendMessage("Protecao de blocos: " + dragonService.isBlockProtectionEnabled());
         sender.sendMessage("Recompensa top 1: " + dragonService.describeTopOneReward());
+        sender.sendMessage("NPC campeao: " + dragonService.describeChampionNpc());
     }
 
     private void spawn(CommandSender sender, String[] args) {
@@ -278,6 +285,53 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(dragonService.prefix() + "Boss bar " + (enabled ? "ativada" : "desativada") + ".");
     }
 
+    private void championNpc(CommandSender sender, String[] args) {
+        if (args.length < 2 || matches(args[1], "status")) {
+            sender.sendMessage(dragonService.prefix() + "NPC campeao: " + dragonService.describeChampionNpc() + ".");
+            return;
+        }
+
+        if (matches(args[1], "set", "setar", "aqui", "here")) {
+            setChampionNpc(sender);
+            return;
+        }
+
+        if (matches(args[1], "remove", "clear", "remover")) {
+            int removed = dragonService.removeChampionNpcDisplays();
+            sender.sendMessage(dragonService.prefix() + "NPCs campeoes removidos do mundo: " + removed
+                    + ". O local continua salvo; no proximo dragao morto ele volta atualizado.");
+            return;
+        }
+
+        if (matches(args[1], "on", "enable", "ativar", "ligar")) {
+            dragonService.setChampionNpcEnabled(true);
+            sender.sendMessage(dragonService.prefix() + "NPC campeao ativado. Status: "
+                    + dragonService.describeChampionNpc() + ".");
+            return;
+        }
+
+        if (matches(args[1], "off", "disable", "desativar", "desligar")) {
+            dragonService.setChampionNpcEnabled(false);
+            sender.sendMessage(dragonService.prefix() + "NPC campeao desativado e removido.");
+            return;
+        }
+
+        sender.sendMessage(dragonService.prefix() + "Uso: /dragaoend npc <set|status|remove|on|off>");
+    }
+
+    private void setChampionNpc(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(dragonService.prefix() + "Apenas jogadores podem usar /dragaoend npc set.");
+            return;
+        }
+
+        Location location = player.getLocation();
+        dragonService.saveChampionNpcLocation(location, player);
+        sender.sendMessage(dragonService.prefix() + "NPC campeao configurado em "
+                + dragonService.formatLocation(location)
+                + " olhando para a mesma direcao que voce.");
+    }
+
     private void setCoords(CommandSender sender, String[] args) {
         if (args.length < 4) {
             sender.sendMessage(dragonService.prefix() + "Uso: /dragaoend setcoords <x> <y> <z> [mundo]");
@@ -331,6 +385,7 @@ final class DragonCommand implements CommandExecutor, TabCompleter {
 
     private void reload(CommandSender sender) {
         dragonScheduler.reload();
+        dragonService.refreshChampionNpcFromConfig();
         sender.sendMessage(dragonService.prefix() + "Config recarregada. Proximo spawn: "
                 + dragonScheduler.formatNextSpawn() + ".");
     }

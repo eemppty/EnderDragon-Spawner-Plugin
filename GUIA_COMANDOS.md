@@ -4,7 +4,7 @@ Plugin para Paper 1.21.11 que spawna um Dragao do End automaticamente no End, co
 
 ## Instalacao
 
-1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.12.0-paper-1.21.11.jar` na pasta `plugins/`.
+1. Coloque o arquivo `EnderDragon-Spawner-Plugin-1.13.0-paper-1.21.11.jar` na pasta `plugins/`.
 2. Reinicie o servidor.
 3. O plugin vai criar a config em:
 
@@ -161,6 +161,49 @@ Desativar:
 
 A boss bar mostra o tempo no titulo, mas o preenchimento da barra mostra a vida atual do dragao.
 
+### NPC campeao
+
+Salvar o local do NPC:
+
+```text
+/dragaoend npc set
+```
+
+Use esse comando parado no local onde o armor stand deve ficar. O plugin salva mundo, coordenadas e a direcao que voce estava olhando.
+
+Depois disso, sempre que um dragao for morto por jogadores, o NPC desse local muda para o matador do dragao:
+
+- cabeca do player
+- nick acima do armor stand
+- peitoral, calca e bota de netherite
+- espada de netherite na mao
+- pose pronta de campeao
+
+Ver status:
+
+```text
+/dragaoend npc status
+```
+
+Remover o armor stand atual, mantendo o local salvo para voltar no proximo dragao morto:
+
+```text
+/dragaoend npc remove
+```
+
+Ativar/desativar:
+
+```text
+/dragaoend npc on
+/dragaoend npc off
+```
+
+Tambem da para salvar o local direto com:
+
+```text
+/dragaoend setnpc
+```
+
 ### Configurar recompensa do top 1
 
 O OP deve segurar o item na mao principal e usar:
@@ -308,6 +351,28 @@ rewards:
 
 Para itens simples, da para editar pela host. Para item com nome, lore ou encantamento, e mais seguro setar pelo comando segurando o item.
 
+### NPC campeao
+
+```yml
+champion-npc:
+  enabled: true
+  update-on-defeat: true
+  name: "&5Campeao do Dragao: &f{player}"
+  gravity: false
+  invulnerable: true
+  world: world
+  x: 0.0
+  y: 80.0
+  z: 0.0
+  yaw: 0.0
+  pitch: 0.0
+  last-player:
+    uuid: ""
+    name: ""
+```
+
+O jeito mais facil e usar `/dragaoend npc set`, porque ele ja salva a posicao e a direcao certinhas.
+
 ## Comportamento do dragao
 
 - O dragao nasce no mundo e coordenadas configurados.
@@ -315,5 +380,6 @@ Para itens simples, da para editar pela host. Para item com nome, lore ou encant
 - O dragao protegido nao quebra blocos.
 - Se os jogadores matarem o dragao, aparece mensagem de vitoria com top 3 de dano.
 - O top 1 de dano recebe a recompensa configurada.
+- Se o NPC campeao estiver ativado, o armor stand troca para o matador do dragao.
 - Se o tempo acabar, o dragao morre pela animacao vanilla, mas nao dropa XP/recompensa/ovo e nao aparece top dano.
 - Depois que some por tempo ou morre, o proximo spawn segue o intervalo configurado.

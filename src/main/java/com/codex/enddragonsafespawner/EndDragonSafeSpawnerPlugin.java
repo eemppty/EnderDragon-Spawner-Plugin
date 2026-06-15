@@ -40,6 +40,7 @@ public final class EndDragonSafeSpawnerPlugin extends JavaPlugin {
         command.setExecutor(dragonCommand);
         command.setTabCompleter(dragonCommand);
 
+        this.dragonService.refreshChampionNpcFromConfig();
         this.dragonScheduler.start();
         getLogger().info("EnderDragon Spawner Plugin ativado.");
     }

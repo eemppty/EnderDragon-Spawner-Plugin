@@ -13,13 +13,16 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
@@ -35,10 +38,13 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.EulerAngle;
 
 import io.papermc.paper.event.block.DragonEggFormEvent;
 
@@ -51,6 +57,7 @@ final class DragonService implements Listener {
     private final EndDragonSafeSpawnerPlugin plugin;
     private final NamespacedKey dragonMarkerKey;
     private final NamespacedKey dragonExpiresAtKey;
+    private final NamespacedKey championNpcKey;
     private final Map<UUID, BossBar> bossBars = new ConcurrentHashMap<>();
     private final Map<UUID, Map<UUID, DamageEntry>> damageByDragon = new ConcurrentHashMap<>();
     private final Map<UUID, Long> timeExpiredDeathDragonIds = new ConcurrentHashMap<>();
@@ -60,6 +67,7 @@ final class DragonService implements Listener {
         this.plugin = plugin;
         this.dragonMarkerKey = dragonMarkerKey;
         this.dragonExpiresAtKey = new NamespacedKey(plugin, "expires_at");
+        this.championNpcKey = new NamespacedKey(plugin, "champion_npc");
     }
 
     SpawnOutcome spawnConfiguredDragon(boolean force) {
@@ -219,6 +227,72 @@ final class DragonService implements Listener {
             return "desativada";
         }
         return describeItem(reward);
+    }
+
+    boolean isChampionNpcEnabled() {
+        return plugin.getConfig().getBoolean("champion-npc.enabled", false);
+    }
+
+    void saveChampionNpcLocation(Location location, Player previewPlayer) {
+        World world = location.getWorld();
+        if (world == null) {
+            return;
+        }
+
+        plugin.getConfig().set("champion-npc.enabled", true);
+        plugin.getConfig().set("champion-npc.world", world.getName());
+        plugin.getConfig().set("champion-npc.x", round(location.getX()));
+        plugin.getConfig().set("champion-npc.y", round(location.getY()));
+        plugin.getConfig().set("champion-npc.z", round(location.getZ()));
+        plugin.getConfig().set("champion-npc.yaw", round(location.getYaw()));
+        plugin.getConfig().set("champion-npc.pitch", round(location.getPitch()));
+
+        ChampionPlayer champion = readStoredChampion();
+        if (champion == null) {
+            champion = new ChampionPlayer(previewPlayer.getUniqueId(), previewPlayer.getName());
+        }
+        saveLastChampion(champion);
+        plugin.saveConfig();
+        spawnChampionNpc(champion);
+    }
+
+    void setChampionNpcEnabled(boolean enabled) {
+        plugin.getConfig().set("champion-npc.enabled", enabled);
+        plugin.saveConfig();
+        if (enabled) {
+            refreshChampionNpcFromConfig();
+        } else {
+            removeChampionNpcs();
+        }
+    }
+
+    void refreshChampionNpcFromConfig() {
+        if (!isChampionNpcEnabled()) {
+            removeChampionNpcs();
+            return;
+        }
+
+        ChampionPlayer champion = readStoredChampion();
+        if (champion != null) {
+            spawnChampionNpc(champion);
+        } else {
+            removeChampionNpcs();
+        }
+    }
+
+    int removeChampionNpcDisplays() {
+        return removeChampionNpcs();
+    }
+
+    String describeChampionNpc() {
+        if (!isChampionNpcEnabled()) {
+            return "desativado";
+        }
+
+        Location location = readChampionNpcLocation();
+        ChampionPlayer champion = readStoredChampion();
+        String player = champion == null ? "nenhum jogador salvo" : champion.playerName();
+        return (location == null ? "local invalido" : formatLocation(location)) + " | jogador: " + player;
     }
 
     void setKillTimeMillis(long millis) {
@@ -620,6 +694,171 @@ final class DragonService implements Listener {
         return itemStack.getType().name().toLowerCase(Locale.ROOT).replace('_', ' ');
     }
 
+    private void updateChampionNpcOnDefeat(EnderDragon dragon, List<DamageEntry> topDamage) {
+        if (!isChampionNpcEnabled() || !plugin.getConfig().getBoolean("champion-npc.update-on-defeat", true)) {
+            return;
+        }
+
+        ChampionPlayer champion = resolveChampionPlayer(dragon, topDamage);
+        if (champion == null) {
+            return;
+        }
+
+        saveLastChampion(champion);
+        plugin.saveConfig();
+        spawnChampionNpc(champion);
+    }
+
+    private ChampionPlayer resolveChampionPlayer(EnderDragon dragon, List<DamageEntry> topDamage) {
+        Player killer = dragon.getKiller();
+        if (killer != null) {
+            return new ChampionPlayer(killer.getUniqueId(), killer.getName());
+        }
+        if (!topDamage.isEmpty()) {
+            DamageEntry topOne = topDamage.get(0);
+            return new ChampionPlayer(topOne.playerId(), topOne.playerName());
+        }
+        return null;
+    }
+
+    private void saveLastChampion(ChampionPlayer champion) {
+        plugin.getConfig().set("champion-npc.last-player.uuid",
+                champion.playerId() == null ? "" : champion.playerId().toString());
+        plugin.getConfig().set("champion-npc.last-player.name", champion.playerName());
+    }
+
+    private ChampionPlayer readStoredChampion() {
+        String playerName = plugin.getConfig().getString("champion-npc.last-player.name", "");
+        String rawUuid = plugin.getConfig().getString("champion-npc.last-player.uuid", "");
+        if ((playerName == null || playerName.isBlank()) && (rawUuid == null || rawUuid.isBlank())) {
+            return null;
+        }
+
+        UUID playerId = null;
+        if (rawUuid != null && !rawUuid.isBlank()) {
+            try {
+                playerId = UUID.fromString(rawUuid);
+            } catch (IllegalArgumentException ignored) {
+                playerId = null;
+            }
+        }
+
+        String fallbackName = playerId == null ? "Jogador" : Bukkit.getOfflinePlayer(playerId).getName();
+        return new ChampionPlayer(playerId, playerName == null || playerName.isBlank()
+                ? Objects.requireNonNullElse(fallbackName, "Jogador")
+                : playerName);
+    }
+
+    private Location readChampionNpcLocation() {
+        String worldName = plugin.getConfig().getString("champion-npc.world", "");
+        if (worldName == null || worldName.isBlank()) {
+            return null;
+        }
+
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            return null;
+        }
+
+        double x = plugin.getConfig().getDouble("champion-npc.x", 0.0);
+        double y = plugin.getConfig().getDouble("champion-npc.y", 80.0);
+        double z = plugin.getConfig().getDouble("champion-npc.z", 0.0);
+        float yaw = (float) plugin.getConfig().getDouble("champion-npc.yaw", 0.0);
+        float pitch = (float) plugin.getConfig().getDouble("champion-npc.pitch", 0.0);
+        return new Location(world, x, y, z, yaw, pitch);
+    }
+
+    private boolean spawnChampionNpc(ChampionPlayer champion) {
+        Location location = readChampionNpcLocation();
+        if (location == null || location.getWorld() == null) {
+            return false;
+        }
+
+        location.getChunk().load(true);
+        removeChampionNpcs();
+        location.getWorld().spawn(location, ArmorStand.class, armorStand -> {
+            armorStand.getPersistentDataContainer().set(this.championNpcKey, PersistentDataType.BYTE, (byte) 1);
+            armorStand.setPersistent(true);
+            armorStand.setRemoveWhenFarAway(false);
+            armorStand.setGravity(plugin.getConfig().getBoolean("champion-npc.gravity", false));
+            armorStand.setInvulnerable(plugin.getConfig().getBoolean("champion-npc.invulnerable", true));
+            armorStand.setCollidable(false);
+            armorStand.setCanPickupItems(false);
+            armorStand.setArms(true);
+            armorStand.setBasePlate(false);
+            armorStand.setSmall(false);
+            armorStand.setMarker(false);
+            armorStand.setCustomName(formatChampionNpcName(champion));
+            armorStand.setCustomNameVisible(true);
+            armorStand.setRotation(location.getYaw(), location.getPitch());
+            applyChampionNpcPose(armorStand);
+            applyChampionNpcEquipment(armorStand, champion);
+        });
+        return true;
+    }
+
+    private String formatChampionNpcName(ChampionPlayer champion) {
+        String template = plugin.getConfig().getString("champion-npc.name", "&5Campeao do Dragao: &f{player}");
+        if (template == null || template.isBlank()) {
+            template = "&5Campeao do Dragao: &f{player}";
+        }
+        return color(template.replace("{player}", champion.playerName()));
+    }
+
+    private void applyChampionNpcPose(ArmorStand armorStand) {
+        armorStand.setHeadPose(new EulerAngle(Math.toRadians(0.0), Math.toRadians(0.0), Math.toRadians(0.0)));
+        armorStand.setBodyPose(new EulerAngle(Math.toRadians(0.0), Math.toRadians(8.0), Math.toRadians(0.0)));
+        armorStand.setRightArmPose(new EulerAngle(Math.toRadians(-72.0), Math.toRadians(18.0), Math.toRadians(8.0)));
+        armorStand.setLeftArmPose(new EulerAngle(Math.toRadians(12.0), Math.toRadians(0.0), Math.toRadians(-10.0)));
+        armorStand.setRightLegPose(new EulerAngle(Math.toRadians(4.0), Math.toRadians(0.0), Math.toRadians(3.0)));
+        armorStand.setLeftLegPose(new EulerAngle(Math.toRadians(-4.0), Math.toRadians(0.0), Math.toRadians(-3.0)));
+    }
+
+    private void applyChampionNpcEquipment(ArmorStand armorStand, ChampionPlayer champion) {
+        EntityEquipment equipment = armorStand.getEquipment();
+        if (equipment == null) {
+            return;
+        }
+
+        equipment.setHelmet(createChampionHead(champion));
+        equipment.setChestplate(new ItemStack(Material.NETHERITE_CHESTPLATE));
+        equipment.setLeggings(new ItemStack(Material.NETHERITE_LEGGINGS));
+        equipment.setBoots(new ItemStack(Material.NETHERITE_BOOTS));
+        equipment.setItemInMainHand(new ItemStack(Material.NETHERITE_SWORD));
+    }
+
+    @SuppressWarnings("deprecation")
+    private ItemStack createChampionHead(ChampionPlayer champion) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta rawMeta = head.getItemMeta();
+        if (rawMeta instanceof SkullMeta skullMeta) {
+            OfflinePlayer owner = champion.playerId() == null
+                    ? Bukkit.getOfflinePlayer(champion.playerName())
+                    : Bukkit.getOfflinePlayer(champion.playerId());
+            skullMeta.setOwningPlayer(owner);
+            skullMeta.setDisplayName(color("&5Cabeca de &f" + champion.playerName()));
+            head.setItemMeta(skullMeta);
+        }
+        return head;
+    }
+
+    private int removeChampionNpcs() {
+        int removed = 0;
+        for (World world : Bukkit.getWorlds()) {
+            for (ArmorStand armorStand : world.getEntitiesByClass(ArmorStand.class)) {
+                if (isChampionNpc(armorStand)) {
+                    armorStand.remove();
+                    removed++;
+                }
+            }
+        }
+        return removed;
+    }
+
+    private boolean isChampionNpc(ArmorStand armorStand) {
+        return armorStand.getPersistentDataContainer().has(this.championNpcKey, PersistentDataType.BYTE);
+    }
+
     private void clearCombatData(UUID dragonId) {
         this.damageByDragon.remove(dragonId);
     }
@@ -692,6 +931,7 @@ final class DragonService implements Listener {
             }
 
             List<DamageEntry> topDamage = getTopDamage(dragon.getUniqueId());
+            updateChampionNpcOnDefeat(dragon, topDamage);
             giveTopOneReward(topDamage);
             announceDefeat(dragon);
             clearCombatData(dragon.getUniqueId());
@@ -760,6 +1000,9 @@ final class DragonService implements Listener {
         static SpawnOutcome failure(String message) {
             return new SpawnOutcome(false, false, message, null);
         }
+    }
+
+    private record ChampionPlayer(UUID playerId, String playerName) {
     }
 
     private static final class DamageEntry {

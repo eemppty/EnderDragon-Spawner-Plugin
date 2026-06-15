@@ -56,6 +56,23 @@ rewards:
     item: null
     message: "&d{player} &7recebeu a recompensa de top 1: &f{item}&7 x{amount}."
 
+champion-npc:
+  enabled: false
+  # Se true, sempre que um dragao for morto por jogadores, o armor stand muda para o novo matador.
+  update-on-defeat: true
+  name: "&5Campeao do Dragao: &f{player}"
+  gravity: false
+  invulnerable: true
+  world: ""
+  x: 0.0
+  y: 80.0
+  z: 0.0
+  yaw: 0.0
+  pitch: 0.0
+  last-player:
+    uuid: ""
+    name: ""
+
 messages:
   prefix: "&5[DragaoEnd]&r "
   spawn: "&dUm Dragao do End nasceu em &f{world} &7(&f{x}, {y}, {z}&7)&d."
